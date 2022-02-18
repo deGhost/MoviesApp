@@ -34,6 +34,7 @@ public class MovieOverview extends AppCompatActivity {
         Glide.with(this)
                 .asBitmap()
                 .load(selectedMovie.getPosterPath())
+                //.apply(new RequestOptions().override(800, 600))
                 .into(ivPoster);
     }
 }

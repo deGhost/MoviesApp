@@ -14,9 +14,13 @@
         android:theme="@style/Theme.MoviesApp">
         <activity
             android:name=".MovieOverview"
+            android:screenOrientation="portrait"
+            android:label="Movie Overview"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
+            android:label="Trending Movies"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

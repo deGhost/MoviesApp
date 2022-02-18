@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/itemLayout">
+    android:id="@+id/itemLayout"
+    android:layout_marginTop="20dp"
+    >
 
     <ImageView
         android:id="@+id/ivMovie"
@@ -17,16 +19,20 @@
         android:text="Movie Title"
         android:textAlignment="center"
         android:layout_marginLeft="10dp"
-        android:textSize="14sp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/deep_grey"
         android:layout_toRightOf="@+id/ivMovie"/>
     <TextView
         android:id="@+id/tvDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="2021"
-        android:textSize="12sp"
+        android:textSize="14sp"
         android:textAlignment="center"
         android:layout_marginLeft="10dp"
+        android:textColor="@color/dramatic_blue"
+        android:textStyle="bold"
         android:layout_toRightOf="@id/ivMovie"
         android:layout_below="@id/tvTitle"
       />
