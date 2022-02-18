@@ -3,6 +3,7 @@ package com.sarali.moviesapp;
 import androidx.annotation.LongDef;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -23,8 +24,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.gson.Gson;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Iterables;
 import com.sarali.moviesapp.models.Movie;
 import com.sarali.moviesapp.movierecyclerview.MoviesRecyclerViewAdapter;
 
@@ -37,30 +38,41 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    private String GET_url = "https://api.themoviedb.org/3/movie/popular?api_key=11d1f5f13f5bd1df8b3150388623acc6";
+    private String GET_url = "https://api.themoviedb.org/3/movie/popular?api_key=11d1f5f13f5bd1df8b3150388623acc6&page=";
     private ArrayList<Movie> moviesList = new ArrayList<Movie>();
-    private HashMap<Integer,Movie>fetchedMovies = new HashMap<>();
-    private ArrayList<String>moviesTest = new ArrayList<>();
-    private Movie movieTest;
+    private Movie movie;
     private SwipeRefreshLayout refreshLayout;
-    MoviesRecyclerViewAdapter moviesRecyclerView;
+    private NestedScrollView nestedScroll;
+    private MoviesRecyclerViewAdapter moviesRecyclerView;
+    private int page = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-
         refreshLayout = findViewById(R.id.refreshLayout);
+        nestedScroll = findViewById(R.id.nestedScroll);
 
         if(!isConnected()) {
             Log.i(TAG, "onCreate: user not connected");
             promptForConnectivity(this);
         }
             Log.i(TAG, "onCreate: user connected");
-            loadData(GET_url);
+            loadData(GET_url, page);
 
+            // No option to fetch multiple pages at once, as the scroll reaches buttom, we fetch the next page
+            nestedScroll.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+
+                    if(scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()){
+                        page = page +1;
+                        loadData(GET_url, page);
+                    }
+
+                }
+            });
+            // Pull to refresh feature to update the list of trending movies
             refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
@@ -74,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    // Building the movies recyclerview
     private void initRecyclerView(){
         RecyclerView recyclerView = findViewById(R.id.rvMovies);
         moviesRecyclerView = new MoviesRecyclerViewAdapter(this,moviesList);
@@ -83,11 +96,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Fetching data from the Movie DB
-    private RequestQueue loadData(String GET_url) {
+    private RequestQueue loadData(String GET_url, int page) {
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
-                GET_url,
+                GET_url+String.valueOf(page),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -97,22 +110,19 @@ public class MainActivity extends AppCompatActivity {
                             jsonObject = new JSONObject(response);
                             JSONArray jArray = jsonObject.getJSONArray("results");
                             for (int i = 0; i < jArray.length(); i++) {
-                                Gson gson = new Gson();
                                 JSONObject currentJsonObj = jArray.getJSONObject(i);
                                 Log.d(TAG, "onResponse: "+ currentJsonObj);
 
                                 // Create an object i from jsonArray response "results"
-                                movieTest = new Movie();
-                                movieTest.setTitle(currentJsonObj.getString("title"));
-                                movieTest.setReleaseDate(currentJsonObj.getString("release_date")); //TODO extract only year
-                                movieTest.setOverview(currentJsonObj.getString("overview"));
-                                movieTest.setPosterPath("https://image.tmdb.org/t/p/w500"+currentJsonObj.getString("poster_path"));
-
-                                // Adding the object as String to a String arrayList for debugging purposes
-                                moviesTest.add(String.valueOf(movieTest.getTitle()));
+                                movie = new Movie();
+                                movie.setTitle(currentJsonObj.getString("title"));
+                                String fullDate = currentJsonObj.getString("release_date");
+                                movie.setReleaseDate(getYear(fullDate));
+                                movie.setOverview(currentJsonObj.getString("overview"));
+                                movie.setPosterPath("https://image.tmdb.org/t/p/w500"+currentJsonObj.getString("poster_path"));
 
                                 // Adding the object fetchedMovies
-                                moviesList.add(movieTest);
+                                moviesList.add(movie);
                                 Log.d("hashmapMovie", "Movie "+ i+ " :"+ moviesList.get(i).getOverview() );
                                 initRecyclerView();
                             }
@@ -132,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    // No need to fetch data if user is not connected to internet
     private boolean isConnected(){
         ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -147,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Redirecting the user to turn on connectivity
     private void promptForConnectivity(Context context){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage("Internet is required for viewing trending movies!")
@@ -168,4 +180,13 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
+    // Formatting the release date of movies to return only Year
+    private String getYear(String fullDate){
+        String[] releaseDate = Iterables.toArray(
+                Splitter
+                        .fixedLength(4).
+                        split(fullDate),
+                String.class);
+        return releaseDate[0];
+    }
 }
