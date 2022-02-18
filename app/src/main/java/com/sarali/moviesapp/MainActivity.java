@@ -16,7 +16,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.View;
+import com.sarali.moviesapp.BuildConfig;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -35,9 +35,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    private String GET_url = "https://api.themoviedb.org/3/movie/popular?api_key=11d1f5f13f5bd1df8b3150388623acc6&page=";
+    private String GET_url = BuildConfig.LINK+ BuildConfig.API_KEY+"&page=";
     private ArrayList<Movie> moviesList = new ArrayList<Movie>();
     private Movie movie;
     private SwipeRefreshLayout refreshLayout;
