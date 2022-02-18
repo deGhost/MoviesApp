@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/itemLayout">
+
+    <ImageView
+        android:id="@+id/ivMovie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/ic_launcher_background" />
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Movie Title"
+        android:textAlignment="center"
+        android:layout_marginLeft="10dp"
+        android:textSize="14sp"
+        android:layout_toRightOf="@+id/ivMovie"/>
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2021"
+        android:textSize="12sp"
+        android:textAlignment="center"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/ivMovie"
+        android:layout_below="@id/tvTitle"
+      />
+
+</RelativeLayout>
