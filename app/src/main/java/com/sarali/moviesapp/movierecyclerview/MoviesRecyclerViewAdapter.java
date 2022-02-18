@@ -1,6 +1,7 @@
 package com.sarali.moviesapp.movierecyclerview;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,12 +16,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.sarali.moviesapp.MovieOverview;
 import com.sarali.moviesapp.R;
 import com.sarali.moviesapp.models.Movie;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MoviesRecyclerViewAdapter.MovieViewHolder>{
+public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MoviesRecyclerViewAdapter.MovieViewHolder> {
     private static final String TAG = "MoviesRecyclerViewAdapt";
     ArrayList <Movie> moviesList = new ArrayList<Movie>();
     Context context;
@@ -60,6 +63,11 @@ public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MoviesRecycl
             public void onClick(View view) {
                 Log.d(TAG, "onClick: item at position: "+position + "has been clicked!");
                 Toast.makeText(context, "Loading overview...", Toast.LENGTH_SHORT).show();
+
+                Intent overview = new Intent(context, MovieOverview.class);
+                overview.putExtra("overview", moviesList.get(position));
+                context.startActivity(overview);
+
             }
         });
     }
