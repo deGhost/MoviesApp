@@ -40,7 +40,7 @@ The API key was hidden in a BuildConfig file.
 ## Run this app ?
 
  1. Clone this repository
- 2. Add a file **'apikey.properties'** at the root of the app 
+ 2. Add a file **'apikey.properties'** at the root of the app with two constants: LINK and API_KEY
  3. Go to **File->Sync Project with Gradle files**
 
 
