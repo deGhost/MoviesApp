@@ -3,6 +3,7 @@ package com.sarali.moviesapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,7 +14,7 @@ import com.sarali.moviesapp.models.Movie;
 import org.w3c.dom.Text;
 
 public class MovieOverview extends AppCompatActivity {
-
+    private static final String TAG = "MovieOverview";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,11 +31,11 @@ public class MovieOverview extends AppCompatActivity {
         tvTitle.setText(selectedMovie.getTitle());
         tvReleaseDate.setText(selectedMovie.getReleaseDate());
         tvOverview.setText(selectedMovie.getOverview());
-
+        Log.d(TAG, "onCreate: selectedMovie.getPosterPath() "+selectedMovie.getPosterPath());
         Glide.with(this)
                 .asBitmap()
                 .load(selectedMovie.getPosterPath())
-                //.apply(new RequestOptions().override(800, 600))
+                //.apply(new RequestOptions().override(800, 900))
                 .into(ivPoster);
     }
 }

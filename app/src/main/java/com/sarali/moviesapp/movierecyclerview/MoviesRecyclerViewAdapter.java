@@ -56,6 +56,7 @@ public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MoviesRecycl
         // setting movie titles & dates
         holder.tvTitle.setText(moviesList.get(position).getTitle());
         holder.tvDate.setText(moviesList.get(position).getReleaseDate());
+        holder.tvBrief.setText(moviesList.get(position).getOverview());
 
         // setting an onClickListener for every item of moviesList
         holder.itemLayout.setOnClickListener(new View.OnClickListener() {
@@ -81,7 +82,7 @@ public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MoviesRecycl
         // Widgets forming the movie item
         RelativeLayout itemLayout;
         ImageView ivMovie;
-        TextView tvTitle, tvDate;
+        TextView tvTitle, tvDate, tvBrief;
 
 
         public MovieViewHolder(@NonNull View itemView) {
@@ -91,6 +92,7 @@ public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MoviesRecycl
             ivMovie = itemView.findViewById(R.id.ivMovie);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvDate = itemView.findViewById(R.id.tvDate);
+            tvBrief= itemView.findViewById(R.id.tvBrief);
             itemLayout = itemView.findViewById(R.id.itemLayout);
 
 

@@ -63,4 +63,7 @@ dependencies {
 
     // Guava
     implementation("com.google.guava:guava:31.0.1-jre")
+
+    // Design
+    implementation 'com.google.android.material:material:1.5.0'
 }
