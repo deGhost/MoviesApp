@@ -38,21 +38,37 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
+    // Endpoint to MovieDB API
     private String GET_url = BuildConfig.LINK+ BuildConfig.API_KEY+"&page=";
+    
+    // List of Movies fetched
     private ArrayList<Movie> moviesList = new ArrayList<Movie>();
+    
+    // This object will serve as template for every movie we fetch from the endpoint
     private Movie movie;
+    
+    // For using pull to refresh
     private SwipeRefreshLayout refreshLayout;
+    
+    // For fetching the next page when bottom is reached
     private NestedScrollView nestedScroll;
+    
+    // The movies recyclerview adapter
     private MoviesRecyclerViewAdapter moviesRecyclerView;
+    
+    // Initial fetching page
     private int page = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        // Retriving views from layout xml
         refreshLayout = findViewById(R.id.refreshLayout);
         nestedScroll = findViewById(R.id.nestedScroll);
 
+        // Fetching data only if user is connected to internet
         if(!isConnected()) {
             Log.i(TAG, "onCreate: user not connected");
             promptForConnectivity(this);
@@ -121,9 +137,9 @@ public class MainActivity extends AppCompatActivity {
                                 movie.setOverview(currentJsonObj.getString("overview"));
                                 movie.setPosterPath("https://image.tmdb.org/t/p/w500"+currentJsonObj.getString("poster_path"));
 
-                                // Adding the object fetchedMovies
+                                // Adding objects to the movie list
                                 moviesList.add(movie);
-                                Log.d("hashmapMovie", "Movie "+ i+ " :"+ moviesList.get(i).getOverview() );
+                                Log.d("ListOfMovies", "Movie "+ i+ " :"+ moviesList.get(i).getOverview() );
                                 initRecyclerView();
                             }
                         } catch (JSONException e) {
@@ -142,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    // No need to fetch data if user is not connected to internet
+    // Checking internet status for both Wifi and mobile data
     private boolean isConnected(){
         ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
