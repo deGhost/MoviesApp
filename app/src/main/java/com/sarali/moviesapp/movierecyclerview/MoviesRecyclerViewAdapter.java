@@ -25,15 +25,19 @@ import java.util.ArrayList;
 
 public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MoviesRecyclerViewAdapter.MovieViewHolder> {
     private static final String TAG = "MoviesRecyclerViewAdapt";
+    
+    // List of Movies, holds the data
     ArrayList <Movie> moviesList = new ArrayList<Movie>();
     Context context;
 
+    // Recyclerview constructor
     public MoviesRecyclerViewAdapter(Context context, ArrayList<Movie> moviesList) {
         this.context = context;
         this.moviesList = moviesList;
 
     }
 
+    // Inflating the view with a single movie item layout
     @NonNull
     @Override
     public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -42,6 +46,7 @@ public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MoviesRecycl
         return movieViewHolder;
     }
 
+    // Loading at start the posters of movies using Glide
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
         Log.d(TAG, "onBindViewHolder: has been called ");
@@ -53,7 +58,7 @@ public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MoviesRecycl
                 .apply(new RequestOptions().override(800, 600))
                 .into(holder.ivMovie);
 
-        // setting movie titles & dates
+        // setting movie titles, dates and overview
         holder.tvTitle.setText(moviesList.get(position).getTitle());
         holder.tvDate.setText(moviesList.get(position).getReleaseDate());
         holder.tvBrief.setText(moviesList.get(position).getOverview());
@@ -73,11 +78,13 @@ public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MoviesRecycl
         });
     }
 
+    // Returning this allows to display n items inside the recyclerview list
     @Override
     public int getItemCount() {
         return moviesList.size();
     }
 
+    // Holds all the widgets composing a single item of the movies list
     public class MovieViewHolder extends RecyclerView.ViewHolder {
         // Widgets forming the movie item
         RelativeLayout itemLayout;
